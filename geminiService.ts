@@ -1,15 +1,14 @@
-import { GoogleGenerativeAI } from "@google/genai";
+import * as GoogleGenAI from "@google/genai";
 import { StudyLevel, StructuredSummary } from "./types";
 
-// Vite haalt de key uit de GitHub Secrets tijdens de build
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+// We gebruiken hier de ster-import om zeker te zijn dat Vite de klasse vindt
+const genAI = new GoogleGenAI.GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 const SYSTEM_INSTRUCTION = `Je bent een gespecialiseerde onderwijsassistent voor het Vlaamse middelbaar onderwijs.
 BELANGRIJKSTE REGEL: Gebruik EXCLUSIEF de onderstaande verstrekte tekst om studiemateriaal te genereren. Verzin geen extra informatie die niet in de tekst staat.
 Gebruik altijd Nederlands. Houd rekening met het opgegeven niveau (1ste t/m 6de middelbaar) qua taalgebruik en complexiteit.`;
 
 export const generateSummary = async (text: string, level: StudyLevel): Promise<StructuredSummary> => {
-  // We roepen het model aan via de officiële SDK methode
   const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
     systemInstruction: SYSTEM_INSTRUCTION 
