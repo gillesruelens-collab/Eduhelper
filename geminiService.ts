@@ -3,7 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { StudyLevel, TestType, MindmapNode, GlossaryItem, Flashcard, Question, TestResult, StructuredSummary } from "./types";
 
 // Always use process.env.API_KEY directly in the constructor
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const ai = new GoogleAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 const ai = new GoogleAI({ apiKey: API_KEY });
 
 const SYSTEM_INSTRUCTION = `Je bent een gespecialiseerde onderwijsassistent voor het Vlaamse middelbaar onderwijs. 
