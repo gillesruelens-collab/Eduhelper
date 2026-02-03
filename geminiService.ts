@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/genai";
 import { StudyLevel, TestType, MindmapNode, GlossaryItem, Flashcard, Question, TestResult, StructuredSummary } from "./types";
 
 // Always use process.env.API_KEY directly in the constructor
