@@ -1,7 +1,7 @@
 import * as GoogleGenAI from "@google/genai";
 import { StudyLevel, StructuredSummary } from "./types";
 
-// We gebruiken hier de container-import om de export-fout te voorkomen
+// We spreken de klasse aan via de 'container' GoogleGenAI
 const genAI = new GoogleGenAI.GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 const SYSTEM_INSTRUCTION = `Je bent een gespecialiseerde onderwijsassistent voor het Vlaamse middelbaar onderwijs.
