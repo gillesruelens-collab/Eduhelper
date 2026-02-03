@@ -1,40 +1,19 @@
-import { GoogleGenerativeAI } from "@google/genai";
+import * as GoogleGenAI from "@google/genai";
 import { StudyLevel, StructuredSummary } from "./types";
 
-/**
- * Vite en Rollup hebben soms moeite om de klasse direct uit de Google SDK te halen na een productie-build.
- * Deze functie controleert op verschillende manieren waar de echte constructor zich bevindt.
- */
-const getAIConstructor = () => {
-    // Check 1: Is het een directe functie?
-    if (typeof GoogleGenerativeAI === 'function') return GoogleGenerativeAI;
-    // Check 2: Zit het onder de 'default' property? (Vaak bij Vite/ESM builds)
-    if ((GoogleGenerativeAI as any).default) return (GoogleGenerativeAI as any).default;
-    // Check 3: Gebruik de variabele zoals hij is
-    return GoogleGenerativeAI;
-};
+// We halen de klasse direct uit de volledige import-container
+const genAI = new (GoogleGenAI as any).GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
-const AIClass = getAIConstructor();
-const genAI = new AIClass(import.meta.env.VITE_GEMINI_API_KEY);
-
-const SYSTEM_INSTRUCTION = `Je bent een gespecialiseerde onderwijsassistent voor het Vlaamse middelbaar onderwijs.
-BELANGRIJKSTE REGEL: Gebruik EXCLUSIEF de onderstaande verstrekte tekst om studiemateriaal te genereren. Verzin geen extra informatie die niet in de tekst staat.
-Gebruik altijd Nederlands. Houd rekening met het opgegeven niveau (1ste t/m 6de middelbaar) qua taalgebruik en complexiteit.`;
+const SYSTEM_INSTRUCTION = `Je bent een gespecialiseerde onderwijsassistent voor het Vlaamse middelbaar onderwijs. Gebruik alleen de verstrekte tekst.`;
 
 export const generateSummary = async (text: string, level: StudyLevel): Promise<StructuredSummary> => {
-    const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
-        systemInstruction: SYSTEM_INSTRUCTION 
-    });
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash",
+    systemInstruction: SYSTEM_INSTRUCTION 
+  });
 
-    const prompt = `Maak een zeer overzichtelijke, gestructureerde samenvatting van de volgende tekst voor een leerling uit het ${level}. 
-    Verdeel de samenvatting in logische hoofdstukken met titels. Geef voor elk hoofdstuk ook een lijst met belangrijke kernpunten.
-    Geef het resultaat in JSON formaat.
-
-    BRONTEKST:
-    ${text}`;
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return JSON.parse(response.text());
+  const prompt = `Maak een samenvatting voor ${level} in JSON van: ${text}`;
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  return JSON.parse(response.text());
 };
