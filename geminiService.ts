@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from "@google/genai";
+import * as GoogleGenAI from "@google/genai";
 import { StudyLevel, StructuredSummary } from "./types";
 
-// We gebruiken de directe import, dit is het meest stabiel voor Vite productieversies
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+// We gebruiken hier de container-import om de export-fout te voorkomen
+const genAI = new GoogleGenAI.GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 const SYSTEM_INSTRUCTION = `Je bent een gespecialiseerde onderwijsassistent voor het Vlaamse middelbaar onderwijs.
 BELANGRIJKSTE REGEL: Gebruik EXCLUSIEF de onderstaande verstrekte tekst om studiemateriaal te genereren. Verzin geen extra informatie die niet in de tekst staat.
