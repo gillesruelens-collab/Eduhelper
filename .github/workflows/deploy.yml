@@ -2,7 +2,7 @@ name: Deploy Vite App
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main"] # Check of je hoofdtak inderdaad 'main' heet en niet 'master'
 
 permissions:
   contents: read
@@ -13,16 +13,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm run build
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
         env:
-          # Dit koppelt de GitHub Secret aan de variabele in je code
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
-      - uses: actions/upload-pages-artifact@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
@@ -33,5 +42,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
