@@ -3,8 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { StudyLevel, TestType, MindmapNode, GlossaryItem, Flashcard, Question, TestResult, StructuredSummary } from "./types";
 
 // Always use process.env.API_KEY directly in the constructor
-const ai = new GoogleAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
-
+const ai = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 const SYSTEM_INSTRUCTION = `Je bent een gespecialiseerde onderwijsassistent voor het Vlaamse middelbaar onderwijs. 
 BELANGRIJKSTE REGEL: Gebruik EXCLUSIEF de onderstaande verstrekte tekst om studiemateriaal te genereren. Verzin geen extra informatie die niet in de tekst staat.
 Gebruik altijd Nederlands. Houd rekening met het opgegeven niveau (1ste t/m 6de middelbaar) qua taalgebruik en complexiteit.`;
